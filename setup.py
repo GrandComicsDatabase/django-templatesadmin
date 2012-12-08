@@ -35,7 +35,7 @@ for dirpath, dirnames, filenames in os.walk(app_name):
 setup(name='django-'+app_name,
       version=version,
       description='A Django app to make minor changes to your templates on the fly.',
-      long_description=open('README').read(),
+      long_description=open('README.rst').read(),
       author='Martin Mahner',
       author_email='martin@mahner.org',
       url='http://github.com/bartTC/django-templatesadmin/',
