@@ -94,6 +94,8 @@ def user_in_templatesadmin_group(user):
         return False
 
 @never_cache
+@login_required
+@user_passes_test(lambda u: user_in_templatesadmin_group(u))
 def listing(request,
              template_name='templatesadmin/overview.html',
              available_template_dirs=TEMPLATESADMIN_TEMPLATE_DIRS):
@@ -130,7 +132,10 @@ def listing(request,
 
     return render_to_response(template_name, template_context,
                               RequestContext(request))
+
 @never_cache
+@login_required
+@user_passes_test(lambda u: user_in_templatesadmin_group(u))
 def modify(request,
            path,
            template_name='templatesadmin/edit.html',
