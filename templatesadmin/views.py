@@ -213,7 +213,7 @@ def modify(request,
             messages.success(request, 
                 message=_('Template "%s" was saved successfully.' % path)
             )
-            return HttpResponseRedirect(reverse('admin:templatesadmin_ftemplate_changelist'))
+            return HttpResponseRedirect(reverse('templatesadmin-overview'))
     else:
         template_file = codecs.open(template_path, 'r', 'utf-8').read()
 
