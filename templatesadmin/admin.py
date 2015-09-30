@@ -1,6 +1,5 @@
 from django.contrib import admin
-from django.conf.urls.defaults import patterns,url
-from django.utils.functional import update_wrapper
+from django.conf.urls import patterns,url
 from django.contrib.admin.sites import AdminSite
 
 from django.utils.translation import ugettext as _
@@ -8,6 +7,8 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden , HttpRespon
 
 from templatesadmin.models import FTemplate 
 from templatesadmin.views import overview, edit
+
+from functools import update_wrapper
 
 class TemplatesAdmin(admin.ModelAdmin):
     """

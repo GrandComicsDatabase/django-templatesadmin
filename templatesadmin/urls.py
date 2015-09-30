@@ -1,6 +1,7 @@
-from django.conf.urls.defaults import patterns,url
-from django.utils.functional import update_wrapper
+from django.conf.urls import patterns,url
 from django.contrib.admin.sites import AdminSite
+
+from functools import update_wrapper
 
 urlpatterns = patterns('',
     url(r'^$', 'templatesadmin.views.listing', name='templatesadmin-overview'),
