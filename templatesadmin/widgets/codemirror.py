@@ -3,7 +3,7 @@ from django.conf import settings
 
 from django.utils.safestring import mark_safe
 from django.utils.html       import escape, conditional_escape
-from django.utils.encoding   import StrAndUnicode, force_unicode
+from django.utils.encoding   import force_unicode
 
 from django.forms.util import flatatt
 from urlparse import urljoin 
