@@ -12,7 +12,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.template.loaders.app_directories import app_template_dirs
+from django.template.utils import get_app_template_dirs
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
 
@@ -81,7 +81,7 @@ TEMPLATESADMIN_TEMPLATE_DIRS = getattr(
     settings,
     'TEMPLATESADMIN_TEMPLATE_DIRS', [
         d for d in list(settings.TEMPLATE_DIRS) + \
-        list(app_template_dirs) if os.path.isdir(d)
+        list(get_app_template_dirs('templates')) if os.path.isdir(d)
     ]
 )
 TEMPLATESADMIN_TEMPLATE_DIRS = [_fixpath(dir) for dir in TEMPLATESADMIN_TEMPLATE_DIRS]
