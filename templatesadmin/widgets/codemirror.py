@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 from django.utils.html       import escape, conditional_escape
 from django.utils.encoding   import force_unicode
 
-from django.forms.util import flatatt
+from django.forms.utils import flatatt
 from urlparse import urljoin 
 
 class CodeMirrorEditor( forms.Textarea ):
