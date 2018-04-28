@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.conf.urls import patterns,url
+from django.conf.urls import url
 from django.contrib.admin.sites import AdminSite
 
 from django.utils.translation import ugettext as _

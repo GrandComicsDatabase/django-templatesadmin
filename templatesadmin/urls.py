@@ -1,4 +1,4 @@
-from django.conf.urls import patterns,url
+from django.conf.urls import url
 from django.contrib.admin.sites import AdminSite
 
 from functools import update_wrapper

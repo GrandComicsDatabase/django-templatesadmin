@@ -37,7 +37,7 @@
             </thead>
             <tbody>
         {% endifchanged %}
-                <tr class="{% cycle row1,row2 %}">
+                <tr class="{% cycle 'row1' 'row2' %}">
                     <td style="width: 99%;">
                         {% if not template.writeable %}<img src="{{ STATIC_URL }}admin/img/icon-no.gif" alt="{% trans "(read only)" %}" title="{% trans "This template is not writeable." %}" />{% endif %}
                         <a href="{% url 'templatesadmin-edit' template.abspath %}">{{ template.abspath|shortenfilepath }}</a></td>

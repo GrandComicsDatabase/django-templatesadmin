@@ -10,7 +10,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.template.utils import get_app_template_dirs
 from django.utils.translation import ugettext as _
@@ -80,7 +80,7 @@ _fixpath = lambda path: os.path.abspath(os.path.normpath(path))
 TEMPLATESADMIN_TEMPLATE_DIRS = getattr(
     settings,
     'TEMPLATESADMIN_TEMPLATE_DIRS', [
-        d for d in list(settings.TEMPLATE_DIRS) + \
+        d for d in list(dir for template_engine in settings.TEMPLATES for dir in template_engine.get('DIRS') ) + \
         list(get_app_template_dirs('templates')) if os.path.isdir(d)
     ]
 )
@@ -130,8 +130,7 @@ def listing(request,
         'opts': FTemplate._meta,
     }
 
-    return render_to_response(template_name, template_context,
-                              RequestContext(request))
+    return render(request, template_name, template_context)
 
 @never_cache
 @login_required
@@ -235,8 +234,7 @@ def modify(request,
         'template_writeable': os.access(template_path, os.W_OK),
     }
 
-    return render_to_response(template_name, template_context,
-                              RequestContext(request))
+    return render(request, template_name, template_context)
 
 # For backwards compatibility and secure out-of-the-box views
 overview = login_required(user_passes_test(lambda u: user_in_templatesadmin_group(u))(listing))
