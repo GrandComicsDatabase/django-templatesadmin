@@ -142,6 +142,9 @@ def modify(request,
            available_template_dirs=TEMPLATESADMIN_TEMPLATE_DIRS):
 
     template_path = _fixpath(path)
+    # problems with relative paths and links on production, remove some
+    if template_path.startswith('/var/www'):
+        template_path = template_path[8:]
     base_form = (TEMPLATESADMIN_USE_RICHEDITOR and RichTemplateForm or TemplateForm)
 
     # Check if file is within template-dirs
