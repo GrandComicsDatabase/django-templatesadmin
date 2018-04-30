@@ -56,6 +56,9 @@ class GitCommitHook(TemplatesAdminHook):
 
         msg = stderr_value.decode(enc).rstrip()
         if status != 0:
+            if status == 1 and msg == '':
+                if 'nothing to commit' in stdout_value:
+                    msg = 'nothing to commit'
             raise TemplatesAdminException(_("Error while executing %(command)s: %(msg)s") % dict(
                                             command=command, 
                                             msg=msg))
