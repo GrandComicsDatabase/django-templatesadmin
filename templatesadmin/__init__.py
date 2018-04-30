@@ -1,4 +1,4 @@
-__version__ = '0.80'
+__version__ = '0.8'
 
 class TemplatesAdminException(Exception):
     pass
