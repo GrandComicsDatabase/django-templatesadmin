@@ -1,93 +1,66 @@
 from django import forms
 from django.conf import settings
+from django.core.serializers.json import json
 
-from django.utils.safestring import mark_safe
-from django.utils.html       import escape, conditional_escape
-from django.utils.encoding   import force_unicode
+from urlparse import urljoin
 
-from django.forms.utils import flatatt
-from urlparse import urljoin 
+BASE_PATH = 'templatesadmin/codemirror'
 
-class CodeMirrorEditor( forms.Textarea ):
+MODES = {'css': [BASE_PATH + '/mode/css/css.js', ],
+         'htmlmixed': [BASE_PATH + '/mode/htmlmixed/htmlmixed.js',
+                       BASE_PATH + '/mode/javascript/javascript.js',
+                       BASE_PATH + '/mode/xml/xml.js',
+                       BASE_PATH + '/mode/css/css.js'],
+         'javascript': [BASE_PATH + '/mode/javascript/javascript.js', ],
+         }
+
+
+class CodeMirrorEditor(forms.Textarea):
     """
         CodeMirror rich-editor in HTML (provides syntax highlight and
         other some basic things.)
 
-        http://marijn.haverbeke.nl/codemirror/manual.html
+        http://codemirror.net/doc/manual.html#config
     """
 
-    CODEEDITOR_JS = """
+
+    @property
+    def media(self):
+        js = [BASE_PATH + '/lib/codemirror.js',
+              BASE_PATH + '/addon/edit/matchbrackets.js',
+              BASE_PATH + '/addon/edit/closebrackets.js',
+              BASE_PATH + '/addon/edit/matchtags.js']
+        mode = self.config['mode']
+        if mode in MODES:
+            js.extend(MODES[mode])
+        elif mode == 'django':
+            js.extend(MODES['htmlmixed'])
+            js.extend([BASE_PATH + '/mode/django/django.js',
+                       BASE_PATH + '/addon/mode/overlay.js'])
+        return forms.Media(js=js,
+                           css={'all': [BASE_PATH + '/lib/codemirror.css', ]})
+
+    def __init__(self, attrs=None, **kwargs):
+        self.config = {"lineNumbers": True,
+                       "matchBrackets": True}
+        if 'extension' in attrs:
+            if attrs['extension'].startswith('htm'):
+                self.config['mode'] = 'django'
+            if attrs['extension'] == 'js':
+                self.config['mode'] = 'javascript'
+            elif attrs['extension'] in MODES.keys():
+                self.config['mode'] = attrs['extension']
+            else:
+                self.config['mode'] = 'htmlmixed'
+        super(CodeMirrorEditor, self).__init__({'rows': '10', 'cols': '80'})
+
+    def render(self, name, value, attrs=None, renderer=None):
+        field = super(CodeMirrorEditor, self).render(name, value, attrs)
+
+        return """%s
 <script type="text/javascript">
-    window.onload = function(e){
-        var editor_%(name)s = CodeMirror.fromTextArea('id_%(name)s', {
-            path: "%(CODEEDITOR_MEDIA_URL)sjs/",
-            height: "%(height)s",
-            autoMatchParens:  true,
-            parserfile: %(parserFiles)s,
-            stylesheet: %(stylesheets)s,
-            lineNumbers: true,
-            indentUnit: 4,
-            tabMode: "shift"
-        });
-    };
+    var code_editor = CodeMirror.fromTextArea(
+        document.getElementById('%s'), %s
+    );
 </script>
-""" 
-
-    SYNTAXES  = {
-              'css':   (('parsecss.js',),('csscolors.css',)),
-              'html':  (("parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js", "parsehtmlmixed.js"), ('xmlcolors.css','jscolors.css','csscolors.css',)),
-              'js':    (("parsejavascript.js","tokenizejavascript.js"), ('jscolors.css',)),
-              'dummy': (("parsedummy.js",), ('dummy.css',))
-             }
-
-    editor_attrs = {
-                    'CODEEDITOR_MEDIA_URL': urljoin( settings.STATIC_URL , 'templatesadmin/codemirror/' ),
-                    'syntax': 'html',
-                    'indentUnit': '4',
-                    'autoMatchParens': 'True',  
-                    'lineNumbers': 'True',
-                    'tabMode': 'shift',
-                    'width':   '240px',
-                    'height':  '300px'
-                }
-
-    def __init__(self, attrs=None):
-        if attrs:
-            self.editor_attrs.update(attrs)
-        
-        super(CodeMirrorEditor, self).__init__({'rows': '10','cols': '40'})
-
-    def render(self, name, value, attrs=None):
-        # Build textarea first
-        if value is None: value = ''
-        text_attrs    = self.build_attrs( attrs , name=name )
-        textarea_html =  u'<textarea%s>%s</textarea>' % (flatatt(text_attrs), conditional_escape(force_unicode(value)))
-
-        # Build the codemirror widget
-        (parserFile,stylesheets) = self.syntax;
-        codeeditor_html = self.CODEEDITOR_JS % dict(name=name , parserFiles=parserFile, stylesheets=stylesheets, **self.editor_attrs )
-
-        return mark_safe( '\n'.join([textarea_html , codeeditor_html ]) )
-
-
-    def _syntax(self):
-        """
-            Given a regular language, return the appropriate files
-            (parserFiles + stylesheets ) in a js-dict-friendly format (remove u'str' formts)
-        """
-        syntax = self.editor_attrs['syntax']
-        if syntax not in self.SYNTAXES:
-            syntax = u'dummy'
-
-        codemedia_url = self.editor_attrs['CODEEDITOR_MEDIA_URL']
-        parserfiles = unicode([str(conditional_escape(f)) for f in self.SYNTAXES[syntax][0] ])
-        stylesheets = unicode([str(conditional_escape(urljoin(codemedia_url, "css/%s" % f))) for f in self.SYNTAXES[syntax][1] ])
-
-        return parserfiles , stylesheets
-
-    def _media(self):
-        return forms.Media( js=( urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'js/codemirror.js') ,),
-                            css={ 'all': (urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'css/codemirror.css'), )})
-
-    syntax = property(_syntax)
-    media  = property(_media)
+""" % (field, attrs['id'], json.dumps(self.config))
