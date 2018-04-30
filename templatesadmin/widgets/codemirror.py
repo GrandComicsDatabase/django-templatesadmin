@@ -1,8 +1,5 @@
 from django import forms
-from django.conf import settings
 from django.core.serializers.json import json
-
-from urlparse import urljoin
 
 BASE_PATH = 'templatesadmin/codemirror'
 
@@ -20,15 +17,14 @@ class CodeMirrorEditor(forms.Textarea):
         CodeMirror rich-editor in HTML (provides syntax highlight and
         other some basic things.)
 
-        http://codemirror.net/doc/manual.html#config
+        http://codemirror.net/
     """
-
 
     @property
     def media(self):
         js = [BASE_PATH + '/lib/codemirror.js',
               BASE_PATH + '/addon/edit/matchbrackets.js',
-              BASE_PATH + '/addon/edit/closebrackets.js',
+              BASE_PATH + '/addon/edit/closetags.js',
               BASE_PATH + '/addon/edit/matchtags.js']
         mode = self.config['mode']
         if mode in MODES:
@@ -42,11 +38,13 @@ class CodeMirrorEditor(forms.Textarea):
 
     def __init__(self, attrs=None, **kwargs):
         self.config = {"lineNumbers": True,
-                       "matchBrackets": True}
+                       "matchBrackets": True,
+                       "matchTags": True,
+                       "autoCloseTags": True}
         if 'extension' in attrs:
             if attrs['extension'].startswith('htm'):
                 self.config['mode'] = 'django'
-            if attrs['extension'] == 'js':
+            elif attrs['extension'] == 'js':
                 self.config['mode'] = 'javascript'
             elif attrs['extension'] in MODES.keys():
                 self.config['mode'] = attrs['extension']
