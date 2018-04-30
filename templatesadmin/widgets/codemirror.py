@@ -24,7 +24,8 @@ class CodeMirrorEditor(forms.Textarea):
     def media(self):
         js = [BASE_PATH + '/lib/codemirror.js',
               BASE_PATH + '/addon/edit/matchbrackets.js',
-              BASE_PATH + '/addon/edit/closetags.js',
+              BASE_PATH + '/addon/edit/closetag.js',
+              BASE_PATH + '/addon/fold/xml-fold.js',
               BASE_PATH + '/addon/edit/matchtags.js']
         mode = self.config['mode']
         if mode in MODES:
