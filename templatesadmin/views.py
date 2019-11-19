@@ -181,7 +181,7 @@ def modify(request,
                 # content is in dos-style lineending, will be converted in next step
                 if (file_content[-1] == '\n' or file_content[:-2] == '\r\n') \
                    and content[:-2] != '\r\n':
-                    content = u"%s\r\n" % content
+                    content = "%s\r\n" % content
 
                 # Template is saved in unix-style, save in unix style.
                 if search("\r\n", file_content) is None:

@@ -20,9 +20,9 @@ class DotBackupFilesHook(TemplatesAdminHook):
 
         try:
             copy(template_path, '%s.backup' % template_path)
-        except IOError, e:
+        except IOError as e:
             raise TemplatesAdminException(
-                _(u'Backup Template "%(path)s" has not been saved! Reason: %(errormsg)s') % {
+                _('Backup Template "%(path)s" has not been saved! Reason: %(errormsg)s') % {
                     'path': template_path,
                     'errormsg': e
                 }
