@@ -96,6 +96,9 @@ See ``LICENSE`` for details.
 
 Changelog:
 ==========
+**v0.9 (2020)**
+
+* Django 2.2 and python3 ready
 
 **v0.8 (2018-04-30)**
 
