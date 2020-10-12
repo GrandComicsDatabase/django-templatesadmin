@@ -171,7 +171,7 @@ def modify(request,
 
             # Save the template
             try:
-                f = open(template_path, 'r')
+                f = open(template_path, 'r', encoding='utf8')
                 file_content = f.read()
                 f.close()
 
