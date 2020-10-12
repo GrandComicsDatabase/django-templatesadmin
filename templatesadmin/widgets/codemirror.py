@@ -47,7 +47,7 @@ class CodeMirrorEditor(forms.Textarea):
                 self.config['mode'] = 'django'
             elif attrs['extension'] == 'js':
                 self.config['mode'] = 'javascript'
-            elif attrs['extension'] in MODES.keys():
+            elif attrs['extension'] in list(MODES.keys()):
                 self.config['mode'] = attrs['extension']
             else:
                 self.config['mode'] = 'htmlmixed'

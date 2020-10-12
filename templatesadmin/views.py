@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ImproperlyConfigured
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template.utils import get_app_template_dirs
@@ -143,9 +143,6 @@ def modify(request,
            available_template_dirs=TEMPLATESADMIN_TEMPLATE_DIRS):
 
     template_path = _fixpath(path)
-    # problems with relative paths and links on production, remove some
-    if template_path.startswith('/var/www'):
-        template_path = template_path[8:]
     base_form = (TEMPLATESADMIN_USE_RICHEDITOR and RichTemplateForm or TemplateForm)
 
     # Check if file is within template-dirs
@@ -174,7 +171,7 @@ def modify(request,
 
             # Save the template
             try:
-                f = open(template_path, 'r')
+                f = open(template_path, 'r', encoding='utf8')
                 file_content = f.read()
                 f.close()
 
@@ -184,7 +181,7 @@ def modify(request,
                 # content is in dos-style lineending, will be converted in next step
                 if (file_content[-1] == '\n' or file_content[:-2] == '\r\n') \
                    and content[:-2] != '\r\n':
-                    content = u"%s\r\n" % content
+                    content = "%s\r\n" % content
 
                 # Template is saved in unix-style, save in unix style.
                 if search("\r\n", file_content) is None:
