@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.urls import path
 from django.urls import re_path
 
 from django.utils.translation import gettext as _
@@ -44,7 +45,7 @@ class TemplatesAdmin(admin.ModelAdmin):
 
         # This is copied on admin.py.
         urlpatterns = [
-            re_path(r'^$',                           wrap(self.changelist_view),     name='templatesadmin_ftemplate_changelist'),
+            path('',                           wrap(self.changelist_view),     name='templatesadmin_ftemplate_changelist'),
             re_path(r'^add/',                        wrap(self.add_view),            name='templatesadmin_ftemplate_add'),
             re_path(r'^edit/(?P<object_id>.*)/$',    wrap(self.change_view),         name='templatesadmin_ftemplate_change'),
         ]
