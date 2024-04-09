@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.conf.urls import url
+from django.conf.urls import re_path
 
 from django.utils.translation import gettext as _
 from django.http import HttpResponseRedirect, HttpResponseForbidden
@@ -10,6 +10,7 @@ from templatesadmin.views import listing, modify
 from functools import update_wrapper
 
 
+@admin.register(FTemplate)
 class TemplatesAdmin(admin.ModelAdmin):
     """
         Admin for TemplatesAdmin
@@ -43,12 +44,11 @@ class TemplatesAdmin(admin.ModelAdmin):
 
         # This is copied on admin.py.
         urlpatterns = [
-            url(r'^$',                           wrap(self.changelist_view),     name='templatesadmin_ftemplate_changelist'),
-            url(r'^add/',                        wrap(self.add_view),            name='templatesadmin_ftemplate_add'),
-            url(r'^edit/(?P<object_id>.*)/$',    wrap(self.change_view),         name='templatesadmin_ftemplate_change'),
+            re_path(r'^$',                           wrap(self.changelist_view),     name='templatesadmin_ftemplate_changelist'),
+            re_path(r'^add/',                        wrap(self.add_view),            name='templatesadmin_ftemplate_add'),
+            re_path(r'^edit/(?P<object_id>.*)/$',    wrap(self.change_view),         name='templatesadmin_ftemplate_change'),
         ]
 
         return urlpatterns
 
 
-admin.site.register(FTemplate, TemplatesAdmin)
