@@ -6,7 +6,7 @@ your templates, that are stored on your disk, via an admin interface.
 
 Originally this app was inspired by dbtemplates_.
 
-.. _Django: http://www.djangoproject.com/
+.. _Django: http://www.djangoproject.com/  
 .. _dbtemplates: http://code.google.com/p/django-dbtemplates/
 
 Installation:
@@ -95,6 +95,10 @@ See ``LICENSE`` for details.
 
 Changelog:
 ==========
+**v0.10 (2024)**
+
+* Django 4.2 ready
+
 **v0.9 (2020)**
 
 * Django 2.2 and python3 ready
