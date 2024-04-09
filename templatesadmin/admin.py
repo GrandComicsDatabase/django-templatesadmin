@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.conf.urls import url
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 
 from templatesadmin.models import FTemplate
