@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.conf.urls import re_path
+from django.urls import re_path
 
 from django.utils.translation import gettext as _
 from django.http import HttpResponseRedirect, HttpResponseForbidden
